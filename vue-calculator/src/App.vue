@@ -20,7 +20,7 @@ import calculator from "./components/calculator.vue";
   </header>
 
   <main>
-    <!--Building first app here. Will remove all Vue stuff afterwards-->
+    <!--Building first app here. Will remove all Vue template stuff afterwards-->
     <calculator />
     <!-- <TheWelcome /> -->
   </main>
