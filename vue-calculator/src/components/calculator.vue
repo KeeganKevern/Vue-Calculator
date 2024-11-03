@@ -41,6 +41,7 @@ export default {
       // Check if the operator is valid
       if (operations[operator]) {
         // Perform the operation, round to two decimals, and then apply truncateTrailingZeros
+
         const result = operations[operator].call(
           this,
           parseFloat(this.previous),
@@ -56,10 +57,11 @@ export default {
             this.current = "Number too long";
           } else {
             this.current = this.truncateTrailingZeros(result.toFixed(2));
+            this.updateDisplay(this.current);
           }
         }
       } else {
-        this.current = "Default";
+        this.current = "User Error";
       }
     },
 
@@ -70,11 +72,14 @@ export default {
       } else return a;
     },
     numberInput(digit) {
+      if (this.current === this.previous) {
+        this.current = "";
+      }
       if (digit !== "." || !this.current.includes(".")) {
         this.current = `${this.current}${digit}`;
       }
       if (this.current.length >= 14) {
-        this.current = "Number too long";
+        this.updateDisplay("Number too long");
       }
 
       // if (digit === ".") {
@@ -86,9 +91,15 @@ export default {
       //   this.current = `${this.current}${digit}`;
       // }
     },
+    // currentToPrevious() {
+    //   this.previous = parseFloat(this.current);
+    //   this.current = "";
+    // },
     currentToPrevious() {
       this.previous = parseFloat(this.current);
-      this.current = "";
+    },
+    updateDisplay(value) {
+      this.current = value;
     },
     checkKey(event) {
       if (event.key !== "Shift") {
@@ -99,9 +110,17 @@ export default {
           //Check to see if number input
           this.numberInput(event.key.toString());
         } else if (operatorArray.includes(event.key)) {
+          //if previous has a value, display the result of the equation, if not update the display to ""
+          if (this.previous !== "") {
+            this.equals(this.operator);
+            this.currentToPrevious();
+          } else {
+            this.currentToPrevious();
+            this.updateDisplay("");
+          }
+
           //check to see if operator input
           this.operator = event.key.toString();
-          this.currentToPrevious();
         }
 
         switch (event.key.toString()) {
@@ -110,8 +129,6 @@ export default {
             break;
           case "=":
           case "Enter":
-            console.log(this.current);
-            console.log(this.previous);
             this.equals(this.operator);
             break;
           case ".":
@@ -120,6 +137,14 @@ export default {
       }
     },
     operatorClick(decimalAsciiForOperator) {
+      //If an operator has already been pressed we need to continuously calculate
+      //I.e. perform equals after every new operator.
+      if (this.operator !== "") {
+        console.log("we here");
+        this.equals(this.operator);
+      }
+
+      //If an operator has not been entered during this calculation, proceed as normal.
       switch (decimalAsciiForOperator) {
         case 42:
           this.operator = "*";
@@ -172,15 +197,11 @@ export default {
 
 <style scoped>
 .calculator {
-  width: 50vw;
-  height: 40vw;
-  min-height: 300px;
-  min-height: 300px;
+  width: 100vw;
+  height: min-content;
   display: grid;
-  grid-template-rows: auto 15% 15% 15% 15% 15%;
+  grid-template-rows: 15% 85px 85px 85px 85px 85px;
   grid-template-columns: 25% 25% 25% 25%;
-
-  border: black 1px solid;
 }
 
 .display {
@@ -193,11 +214,28 @@ export default {
   align-items: center;
   padding-right: 5%;
   padding-left: 5%;
+
+  font-size: clamp(30px, 9vw, 40px);
 }
+
 .button {
   font-size: large;
   border: solid lightgrey 1px;
   border-radius: inherit;
   background-color: orange;
+}
+
+@media (min-width: 769px) {
+  .calculator {
+    width: 50vw;
+    height: 40vw;
+    min-height: 300px;
+    min-height: 300px;
+    border: black 1px solid;
+    grid-template-rows: auto;
+  }
+  .display {
+    font-size: clamp(40px, 9vw, 50px);
+  }
 }
 </style>
