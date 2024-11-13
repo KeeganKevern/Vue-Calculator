@@ -28,6 +28,7 @@ export default {
         return 0;
       }
       if (b === 0) {
+        console.log("TEST");
         return "User Error";
       } else return a / b;
     },
