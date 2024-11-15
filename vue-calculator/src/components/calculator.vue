@@ -14,32 +14,14 @@ export default {
     backspace() {
       this.current = this.current.slice(0, -1);
     },
-    sum(a, b) {
-      return a + b;
-    },
-    subtract(a, b) {
-      return a - b;
-    },
-    multiply(a, b) {
-      return a * b;
-    },
-    divide(a, b) {
-      if (a === 0) {
-        return 0;
-      }
-      if (b === 0) {
-        console.log("TEST");
-        return "User Error";
-      } else return a / b;
-    },
 
     equals(operator) {
       // Define operations
       const operations = {
-        "+": this.sum,
-        "-": this.subtract,
-        "*": this.multiply,
-        "/": this.divide,
+        "+": (x, y) => x + y,
+        "-": (x, y) => x - y,
+        "*": (x, y) => x * y,
+        "/": (x, y) => (y === 0 ? "User Error" : x / y),
       };
 
       if (this.operator === "=") {
@@ -121,6 +103,14 @@ export default {
           case ".":
             this.numberInput(".");
         }
+        console.log(
+          "current: ",
+          this.current,
+          "previous: ",
+          this.previous,
+          "operator: ",
+          this.operator
+        );
       }
     },
     operatorClick(givenOperator) {
@@ -128,7 +118,6 @@ export default {
       //I.e. perform equals after every new operator.
       if (this.operator !== "") {
         //remove previous operator "in use" colour, should one exist
-
         document.getElementById(this.operator).classList.remove("!bg-blue-400");
         this.equals(this.operator);
       }
@@ -148,6 +137,9 @@ export default {
 
 <template>
   <div class="calculator rounded-md shadow-lg">
+    <div id="previousDisplay" class="bg-black">
+      {{ previous }}
+    </div>
     <div class="display text-6xl">{{ current || "0" }}</div>
     <button
       @click="operatorClick('+')"
@@ -219,7 +211,7 @@ export default {
   width: 100vw;
   height: min-content;
   display: grid;
-  grid-template-rows: 50vh 10vh 10vh 10vh 10vh 10vh;
+  grid-template-rows: 5vh 45vh 10vh 10vh 10vh 10vh 10vh;
   grid-template-columns: 25% 25% 25% 25%;
 }
 
@@ -235,6 +227,17 @@ export default {
   padding-left: 5%;
 
   font-size: clamp(30px, 9vw, 40px);
+  word-wrap: break-word;
+  border: 1px solid black;
+}
+#previousDisplay {
+  grid-column-start: 1;
+  grid-column-end: 5;
+  padding: 5%;
+  border: 1px solid black;
+  color: #eeeeeeb9;
+  display: flex;
+  justify-content: end;
 }
 
 .button {
