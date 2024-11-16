@@ -48,6 +48,10 @@ export default {
           } else {
             this.current = this.truncateTrailingZeros(result.toFixed(2));
             this.updateDisplay(this.current);
+            this.previous = "";
+            document
+              .getElementById(this.operator)
+              .classList.remove("!bg-blue-400");
           }
         }
       } else {
@@ -62,9 +66,9 @@ export default {
       } else return longDecimalDigit;
     },
     numberInput(digit) {
-      if (this.current === this.previous) {
-        this.current = "";
-      }
+      // if (this.current === this.previous) {
+      //   this.current = "";
+      // }
       if (digit !== "." || !this.current.includes(".")) {
         this.current = `${this.current}${digit}`;
       }
@@ -114,6 +118,10 @@ export default {
       }
     },
     operatorClick(givenOperator) {
+      //This clears the previousDisplay and allows clean continuous calculations.
+      if (this.previous === "") {
+        this.previous = "0";
+      }
       //If an operator has already been pressed we need to continuously calculate
       //I.e. perform equals after every new operator.
       if (this.operator !== "") {
