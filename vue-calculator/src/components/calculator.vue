@@ -1,7 +1,13 @@
 <script>
 export default {
   data() {
-    return { current: "", previous: "", operator: "", previousOperator: "" };
+    return {
+      current: "",
+      previous: "",
+      operator: "",
+      previousOperator: "",
+      wasEqualsPressed: "",
+    };
   },
   methods: {
     clear() {
@@ -10,23 +16,24 @@ export default {
       document.getElementById(this.operator).classList.remove("!bg-blue-400");
       this.operator = "";
       this.previousOperator = "";
+      this.wasEqualsPressed = "";
     },
     backspace() {
       this.current = this.current.slice(0, -1);
     },
 
     equals(operator) {
+      if (operator === "=") {
+        this.wasEqualsPressed = "yes";
+      }
+
       // Define operations
       const operations = {
         "+": (x, y) => x + y,
         "-": (x, y) => x - y,
         "*": (x, y) => x * y,
-        "/": (x, y) => (y === 0 ? "User Error" : x / y),
+        "/": (x, y) => (y === 0 ? "User Error 1" : x / y),
       };
-
-      if (this.operator === "=") {
-        this.operator === this.previousOperator;
-      }
 
       // Check if the operator is valid
       if (operations[operator]) {
@@ -40,7 +47,7 @@ export default {
 
         // Handle division by zero case
         if (operator === "/" && parseFloat(this.current) === 0) {
-          this.current = "User Error";
+          this.current = "User Error 2";
         } else {
           // Round the result to two decimal places and then apply truncateTrailingZeros
           if (result.length >= 14) {
@@ -55,7 +62,7 @@ export default {
           }
         }
       } else {
-        this.current = "User Error";
+        this.current = "User Error 3";
       }
     },
 
@@ -66,12 +73,17 @@ export default {
       } else return longDecimalDigit;
     },
     numberInput(digit) {
-      // if (this.current === this.previous) {
-      //   this.current = "";
-      // }
+      //This allows a reset to occur after enter has been pressed, without removing the result too soon.
+      if (this.wasEqualsPressed === "yes") {
+        this.current = "0";
+      }
+
+      //A number will always pass through this if statement, a decimal will only pass if one does not already exist.
       if (digit !== "." || !this.current.includes(".")) {
         this.current = `${this.current}${digit}`;
       }
+
+      //This limits the display value of the calculator.
       if (this.current.length >= 14) {
         this.updateDisplay("Number too long");
       }
@@ -107,14 +119,6 @@ export default {
           case ".":
             this.numberInput(".");
         }
-        console.log(
-          "current: ",
-          this.current,
-          "previous: ",
-          this.previous,
-          "operator: ",
-          this.operator
-        );
       }
     },
     operatorClick(givenOperator) {
@@ -144,8 +148,8 @@ export default {
 </script>
 
 <template>
-  <div class="calculator rounded-md shadow-lg">
-    <div id="previousDisplay" class="bg-black">
+  <div class="calculator rounded-md shadow-lg bg-black">
+    <div id="previousDisplay" class="text-3xl b">
       {{ previous }}
     </div>
     <div class="display text-6xl">{{ current || "0" }}</div>
@@ -217,10 +221,10 @@ export default {
 <style scoped>
 .calculator {
   width: 100vw;
-  height: min-content;
+  height: 100vh;
   display: grid;
-  grid-template-rows: 5vh 45vh 10vh 10vh 10vh 10vh 10vh;
-  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 10vh auto 10vh 10vh 10vh 10vh 10vh;
+  grid-template-columns: 25vw 25vw 25vw 25vw;
 }
 
 .display {
@@ -231,25 +235,22 @@ export default {
   display: flex;
   justify-content: end;
   align-items: center;
-  padding-right: 5%;
-  padding-left: 5%;
-
-  font-size: clamp(30px, 9vw, 40px);
-  word-wrap: break-word;
-  border: 1px solid black;
+  padding: 2rem;
+  font-size: 3rem;
 }
+
 #previousDisplay {
   grid-column-start: 1;
   grid-column-end: 5;
   padding: 5%;
-  border: 1px solid black;
+  border-bottom: 2px solid orange;
   color: #eeeeeeb9;
   display: flex;
   justify-content: end;
 }
 
 .button {
-  font-size: large;
+  font-size: 2rem;
   border: solid lightgrey 1px;
   border-radius: inherit;
   background-color: orange;
