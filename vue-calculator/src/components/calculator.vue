@@ -6,7 +6,7 @@ export default {
       previous: "",
       operator: "",
       previousOperator: "",
-      wasEqualsPressed: "",
+      endOfCalculation: "",
     };
   },
   methods: {
@@ -16,17 +16,13 @@ export default {
       document.getElementById(this.operator).classList.remove("!bg-blue-400");
       this.operator = "";
       this.previousOperator = "";
-      this.wasEqualsPressed = "";
+      this.endOfCalculation = "";
     },
     backspace() {
       this.current = this.current.slice(0, -1);
     },
 
     equals(operator) {
-      if (operator === "=") {
-        this.wasEqualsPressed = "yes";
-      }
-
       // Define operations
       const operations = {
         "+": (x, y) => x + y,
@@ -47,22 +43,16 @@ export default {
 
         // Handle division by zero case
         if (operator === "/" && parseFloat(this.current) === 0) {
-          this.current = "User Error 2";
+          this.current = "DIV/0 Error";
         } else {
           // Round the result to two decimal places and then apply truncateTrailingZeros
-          if (result.length >= 14) {
-            this.current = "Number too long";
-          } else {
-            this.current = this.truncateTrailingZeros(result.toFixed(2));
-            this.updateDisplay(this.current);
-            this.previous = "";
-            document
-              .getElementById(this.operator)
-              .classList.remove("!bg-blue-400");
-          }
+
+          this.clear();
+          this.endOfCalculation = 1;
+          this.current = this.truncateTrailingZeros(result.toFixed(2));
         }
       } else {
-        this.current = "User Error 3";
+        this.current = "";
       }
     },
 
@@ -73,28 +63,21 @@ export default {
       } else return longDecimalDigit;
     },
     numberInput(digit) {
-      //This allows a reset to occur after enter has been pressed, without removing the result too soon.
-      if (this.wasEqualsPressed === "yes") {
-        this.current = "0";
-      }
-
       //A number will always pass through this if statement, a decimal will only pass if one does not already exist.
       if (digit !== "." || !this.current.includes(".")) {
+        if (this.endOfCalculation === 1) {
+          //This provides a soft reset if a calculation has been completed
+          this.current = "";
+          this.endOfCalculation = "";
+        }
         this.current = `${this.current}${digit}`;
-      }
-
-      //This limits the display value of the calculator.
-      if (this.current.length >= 14) {
-        this.updateDisplay("Number too long");
       }
     },
 
     currentToPrevious() {
       this.previous = parseFloat(this.current);
     },
-    updateDisplay(value) {
-      this.current = value;
-    },
+
     checkKey(event) {
       if (event.key !== "Shift") {
         const numberArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
@@ -122,10 +105,6 @@ export default {
       }
     },
     operatorClick(givenOperator) {
-      //This clears the previousDisplay and allows clean continuous calculations.
-      if (this.previous === "") {
-        this.previous = "0";
-      }
       //If an operator has already been pressed we need to continuously calculate
       //I.e. perform equals after every new operator.
       if (this.operator !== "") {
@@ -136,7 +115,8 @@ export default {
 
       //If an operator has not been entered during this calculation, proceed as normal.
       this.operator = givenOperator;
-      this.previous = parseFloat(this.current);
+      this.previous = this.current === "" ? "0" : parseFloat(this.current);
+      // this.previous = parseFloat(this.current);
       this.current = "";
       document.getElementById(this.operator).classList.add("!bg-blue-400");
     },
@@ -237,6 +217,9 @@ export default {
   align-items: center;
   padding: 2rem;
   font-size: 3rem;
+
+  overflow: hidden;
+  word-break: break-all;
 }
 
 #previousDisplay {
