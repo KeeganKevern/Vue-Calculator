@@ -246,15 +246,14 @@ export default {
 
 @media (min-width: 769px) {
   .calculator {
-    width: 50vw;
-    height: 40vw;
-    min-height: 300px;
-    min-height: 300px;
+    width: fit-content;
+    height: fit-content;
     border: black 1px solid;
-    grid-template-rows: auto;
+    grid-template-rows: 7vw auto 7vw 7vw 7vw 7vw 7vw;
+    grid-template-columns: 7vw 7vw 7vw 7vw;
   }
   .display {
-    font-size: clamp(40px, 9vw, 50px);
+    font-size: 2rem;
   }
 }
 </style>
