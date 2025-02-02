@@ -200,11 +200,11 @@ export default {
 
 <style scoped>
 .calculator {
-  width: 100vw;
-  height: 100vh;
+  width: 100dvw;
+  height: 100dvh;
   display: grid;
-  grid-template-rows: 10vh auto 10vh 10vh 10vh 10vh 10vh;
-  grid-template-columns: 25vw 25vw 25vw 25vw;
+  grid-template-rows: 10dvh auto 10dvh 10dvh 10dvh 10dvh 10dvh;
+  grid-template-columns: 25dvw 25dvw 25dvw 25dvw;
 }
 
 .display {
@@ -237,6 +237,7 @@ export default {
   border: solid lightgrey 1px;
   border-radius: inherit;
   background-color: orange;
+  color: black;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
