@@ -4,7 +4,7 @@ input the equation "12 + 2 =" using Keyboard, mouse, and hybrid input to determi
 source of the problem. Observe the output/calculated result.
 
 K == keyboard input
-M = Mouse input
+M == Mouse input
 
 12 + 2 = NaN
 KK K K K

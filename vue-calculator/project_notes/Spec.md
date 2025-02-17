@@ -1,4 +1,4 @@
-Vue Calculator Test Cases
+Vue Calculator Spec
 
 Script
 Can user input via keyboard and mouse click?

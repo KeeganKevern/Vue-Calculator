@@ -29,7 +29,7 @@ test(
     expect(wrapper.vm.previousOperator).toBe("");
     expect(wrapper.vm.endOfCalculation).toBe(" ");
 
-    expect(document.getElementById).toHaveBeenCalledWith("+"); // You can check for the specific operator, like "+"
+    expect(document.getElementById).toHaveBeenCalledWith("+");
     expect(document.getElementById().classList.remove).toHaveBeenCalledWith(
       "!bg-blue-400"
     );
