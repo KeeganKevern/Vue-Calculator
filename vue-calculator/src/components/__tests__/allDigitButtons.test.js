@@ -1,24 +1,18 @@
 import { test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import Calculator from "../calculator.vue";
+import calculator from "../calculator.vue";
 
-test("clear resets current, previous, operator, previousOperator, and endOfCalculation", async () => {
-  const wrapper = mount(Calculator);
+test("all digits update value", async () => {
+  const wrapper = mount(calculator);
 
-  // Set values to the props
-  wrapper.vm.current = "1";
-  wrapper.vm.previous = "2";
-  wrapper.vm.operator = "+";
-  wrapper.vm.previousOperator = "*";
-  wrapper.vm.endOfCalculation = "Y";
+  // Grab all Digit buttons
+  for (let i = 9; i >= 0; i--) {
+    const button = wrapper.find(`button[aria-label = "${i}"]`);
 
-  // Execute the clear method
-  await wrapper.vm.clear();
+    //Click all Digit buttons in reverse in order to incude 0
+    await button.trigger("click");
+  }
 
-  // Expect all properties to be reset
-  expect(wrapper.vm.current).toBe("");
-  expect(wrapper.vm.previous).toBe("");
-  expect(wrapper.vm.operator).toBe("");
-  expect(wrapper.vm.previousOperator).toBe("");
-  expect(wrapper.vm.endOfCalculation).toBe("");
+  //prove it works
+  expect(wrapper.vm.current).toBe("9876543210");
 });
