@@ -2,10 +2,6 @@ import { test, expect, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import calculator from "../calculator.vue";
 
-// // Equals Function
-// // Test: When the equals button is clicked, it performs the correct operation using the previous and current values.
-// // Reason: Verify that the equals() method computes the correct result for each operator (+, -, *, /), including rounding to two decimal places and handling division by zero.
-
 //Result = 10 [symbol] 3 (2dp)
 const operatorProperties = [
   {
@@ -60,4 +56,16 @@ test("Equals function calculates appropriately", async () => {
     //This displayes that each operator has been tested.
     console.log(object.label + " pass");
   }
+});
+
+test("Divide by zero gives error", async () => {
+  const wrapper = mount(calculator);
+
+  wrapper.vm.current = 0;
+  wrapper.vm.previous = 1;
+  wrapper.vm.operator = "/";
+
+  await wrapper.vm.equals("/");
+
+  expect(wrapper.vm.current).toBe("DIV/0 Error");
 });

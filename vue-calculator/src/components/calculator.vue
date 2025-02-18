@@ -74,10 +74,6 @@ export default {
       }
     },
 
-    currentToPrevious() {
-      this.previous = parseFloat(this.current);
-    },
-
     checkKey(event) {
       if (event.key !== "Shift") {
         const numberArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
@@ -116,13 +112,13 @@ export default {
       //If an operator has not been entered during this calculation, proceed as normal.
       this.operator = givenOperator;
       this.previous = this.current === "" ? "0" : parseFloat(this.current);
-      // this.previous = parseFloat(this.current);
+
       this.current = "";
       document.getElementById(this.operator).classList.add("!bg-blue-400");
     },
   },
   mounted() {
-    window.addEventListener("keyup", this.checkKey);
+    document.addEventListener("keyup", this.checkKey);
   },
 };
 </script>
