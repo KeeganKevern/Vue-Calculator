@@ -4,7 +4,6 @@
 describe("Page rendering", () => {
   beforeEach(() => {
     cy.visit("http://localhost:5173/");
-    cy.wait(2000);
   });
 
   it("check status 200", () => {

@@ -13,7 +13,12 @@ export default {
     clear() {
       this.current = "";
       this.previous = "";
-      document.getElementById(this.operator).classList.remove("!bg-blue-400");
+      if (this.operator) {
+        const operatorElement = document.getElementById(this.operator);
+        if (operatorElement) {
+          operatorElement.classList.remove("!bg-blue-400");
+        }
+      }
       this.operator = "";
       this.previousOperator = "";
       this.endOfCalculation = "";
@@ -128,7 +133,7 @@ export default {
     <div id="previousDisplay" class="text-3xl b">
       {{ previous }}
     </div>
-    <div class="display text-6xl">{{ current || "0" }}</div>
+    <div id="display" class="display text-6xl">{{ current || "0" }}</div>
     <button
       @click="operatorClick('+')"
       id="+"
